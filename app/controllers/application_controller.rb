@@ -23,4 +23,32 @@ class ApplicationController < Sinatra::Base
     baked_good.to_json
   end
 
+
+  post '/baked_goods' do
+    baked_good = BakedGood.new(params)
+    if baked_good.save
+      baked_good.to_json
+    else
+      halt 422, { error: "Failed to create baked good" }.to_json
+    end
+  end
+
+  patch '/bakeries/:id' do
+    bakery = Bakery.find(params[:id])
+    if bakery.update(params) # Update to pass params directly
+      bakery.to_json
+    else
+      halt 422, { error: "Failed to update bakery" }.to_json
+    end
+  end
+  
+  delete '/baked_goods/:id' do
+    baked_good = BakedGood.find(params[:id])
+    if baked_good.destroy
+      status 204
+    else
+      halt 422, { error: "Failed to delete baked good" }.to_json
+    end
+  end
+  
 end
